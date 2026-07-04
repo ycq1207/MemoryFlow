@@ -67,7 +67,7 @@ class ReviewWindow(QWidget):
         self.phase_label.setObjectName("phaseLabel")
         top_bar.addWidget(self.phase_label)
         top_bar.addStretch()
-        self.btn_back = QPushButton("�?返回主页")
+        self.btn_back = QPushButton("↩返回主页")
         self.btn_back.setObjectName("topNavBtn")
         self.btn_back.clicked.connect(self._confirm_exit)
         top_bar.addWidget(self.btn_back)
@@ -145,8 +145,8 @@ class ReviewWindow(QWidget):
 
     def _confirm_exit(self):
         reply = QMessageBox.question(
-            self, "确认退�?,
-            "确定要停止复习并返回主页吗？\n本次复习进度不会保存�?,
+            self, "确认退出",
+            "确定要停止复习并返回主页吗？\n本次复习进度不会保存。",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
@@ -164,7 +164,7 @@ class ReviewWindow(QWidget):
         self._closed_emitted = False
         self.reviews = self.card_manager.get_due_reviews(limit=50)
         if not self.reviews:
-            QMessageBox.information(self, "完成", "暂无待复习的内容！去学习新内容吧�?)
+            QMessageBox.information(self, "完成", "暂无待复习的内容！去学习新内容吧。")
             self.close()
             return
         self.current_index = 0
@@ -220,10 +220,10 @@ class ReviewWindow(QWidget):
             "poem": f"请输入第 {done + 1} 句（不需要标点）",
             "question": f"请输入第 {done + 1} 题的答案",
             "vocabulary": f"请输入第 {done + 1} 个单词的释义",
-            "article": f"请输入第 {done + 1} 段内�?,
-            "formula": f"请输入第 {done + 1} 个公�?,
+            "article": f"请输入第 {done + 1} 段内容",
+            "formula": f"请输入第 {done + 1} 个公式",
         }
-        line_num = QLabel(prompt_texts.get(self.card_type, f"请输入第 {done + 1} �?))
+        line_num = QLabel(prompt_texts.get(self.card_type, f"请输入第 {done + 1} 句"))
         line_num.setObjectName("reciteLineNum")
         line_num.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.card_layout.addWidget(line_num)
@@ -254,7 +254,7 @@ class ReviewWindow(QWidget):
                 ll.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 cl.addWidget(ll)
                 is_ok = self.test_results[i] if i < len(self.test_results) else False
-                tag = QLabel("�?正确" if is_ok else "�?有误")
+                tag = QLabel("✅ 正确" if is_ok else "❌ 有误")
                 tag.setObjectName("reciteTag" if is_ok else "mistakeTag")
                 tag.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 cl.addWidget(tag)
@@ -265,7 +265,7 @@ class ReviewWindow(QWidget):
                     cl.addWidget(corr)
             else:
                 if self.card_type == "question":
-                    question_label = QLabel(f"�?{self.original_lines[i]}")
+                    question_label = QLabel(f"❓ {self.original_lines[i]}")
                     question_label.setObjectName("reciteLineDone")
                     question_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
                     cl.addWidget(question_label)
@@ -273,13 +273,13 @@ class ReviewWindow(QWidget):
                 input_field = QLineEdit()
                 input_field.setObjectName("typingInput")
                 placeholder_texts = {
-                    "poem": "请输入诗句�?,
-                    "question": "请输入答案�?,
-                    "vocabulary": "请输入释义�?,
-                    "article": "请输入段落内容�?,
-                    "formula": "请输入公式�?,
+                    "poem": "请输入诗句。",
+                    "question": "请输入答案。",
+                    "vocabulary": "请输入释义。",
+                    "article": "请输入段落内容。",
+                    "formula": "请输入公式。",
                 }
-                input_field.setPlaceholderText(placeholder_texts.get(self.card_type, "请输入�?))
+                input_field.setPlaceholderText(placeholder_texts.get(self.card_type, "请输入。"))
                 input_field.returnPressed.connect(self._submit_review)
                 self.input_fields.append(input_field)
                 cl.addWidget(input_field)
@@ -296,7 +296,7 @@ class ReviewWindow(QWidget):
         self.card_layout.addStretch()
 
         if done > 0:
-            btn_back = QPushButton("↩️ 上一�?)
+            btn_back = QPushButton("↩️ 上一句")
             btn_back.setObjectName("backBtn")
             btn_back.clicked.connect(self._prev_review)
             self.middle_bar.addWidget(btn_back)
@@ -308,7 +308,7 @@ class ReviewWindow(QWidget):
         self.middle_bar.addWidget(btn_hint)
         self.middle_bar.addSpacing(12)
 
-        btn_submit = QPushButton("�?提交")
+        btn_submit = QPushButton("✅ 提交")
         btn_submit.setObjectName("primaryBtn")
         btn_submit.setMinimumHeight(44)
         btn_submit.clicked.connect(self._submit_review)
@@ -335,7 +335,7 @@ class ReviewWindow(QWidget):
             first_char = self.original_lines[done][0] if self.original_lines[done] else ""
             for label in self.hint_labels:
                 if self.hint_visible:
-                    label.setText(f"提示：「{first_char} ___�?)
+                    label.setText(f"提示：「{first_char} ___」")
                 else:
                     label.setText("")
                 label.setVisible(self.hint_visible)
@@ -374,14 +374,14 @@ class ReviewWindow(QWidget):
         self.progress_bar.setValue(100)
 
         if wrong > 0 and self.hints_used:
-            self.phase_label.setText("✍️ 无提示验�?)
+            self.phase_label.setText("✍️ 默写验证 - 无提示")
             title = QLabel("你使用了提示，请再默写一遍（无提示）")
             title.setObjectName("resultSummary")
             title.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.card_layout.addWidget(title)
             self.card_layout.addStretch()
 
-            btn = QPushButton("开始无提示默写 �?)
+            btn = QPushButton("开始无提示默写 ✅")
             btn.setObjectName("primaryBtn")
             btn.setMinimumHeight(48)
             btn.clicked.connect(self._start_verify)
@@ -391,7 +391,7 @@ class ReviewWindow(QWidget):
             return
 
         self.phase_label.setText("📊 复习结果")
-        summary = QLabel(f"🎯 对了 {correct} 句，�?错了 {wrong} �?)
+        summary = QLabel(f"🎯 对了 {correct} 句，❌ 错了 {wrong} 句")
         summary.setObjectName("resultSummary")
         summary.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.card_layout.addWidget(summary)
@@ -433,7 +433,7 @@ class ReviewWindow(QWidget):
             self.bottom_bar.addWidget(restudy_btn)
             self.bottom_bar.addSpacing(10)
 
-        finish_btn = QPushButton("�?完成复习")
+        finish_btn = QPushButton("✅ 完成复习")
         finish_btn.setObjectName("primaryBtn")
         finish_btn.setMinimumHeight(44)
         finish_btn.clicked.connect(self._finish_current)
@@ -478,7 +478,7 @@ class ReviewWindow(QWidget):
             self.card_layout.addWidget(pair)
 
         self.card_layout.addStretch()
-        btn = QPushButton("�?我已记住，开始默�?�?)
+        btn = QPushButton("✅ 我已记住，开始默写 ✅")
         btn.setObjectName("primaryBtn")
         btn.setMinimumHeight(48)
         btn.clicked.connect(self._start_retest)
