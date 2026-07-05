@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+release/
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Project specific
+database/*.db
+database/*.db-wal
+database/*.db-shm
+logs/
+.DS_Store
+Thumbs.db
+
+# PyInstaller
+*.spec.bak
+MemoryFlow.spec
+MemoryFlow.exe
